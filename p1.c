@@ -5,7 +5,8 @@
 #include "pav_analysis.h"
 #include "fic_wave.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=funciónes 2='1'+archivo de audio
+                                   // 3='2'+archivo.txt 
     float durTrm = 0.010;
     float fm;
     int   N;
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]) {
     float *x;
     short *buffer;
     FILE  *fpWave;
+    FILE  *fpResult;
 
     if (argc != 2 && argc != 3) {
         fprintf(stderr, "Empleo: %s inputfile [outputfile]\n", argv[0]);
@@ -30,17 +32,33 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Error al ubicar los vectores (%s)\n", strerror(errno));
         return -1;
     }
-
+    if (argc==3)
+    {
+        fpResult=fopen(argv[2],"at");// abrimos el archivo.txt pasado como parametro para escribir al final
+    }
+    
     trm = 0;
     while (lee_wave(buffer, sizeof(*buffer), N, fpWave) == N) {
         for (int n = 0; n < N; n++) x[n] = buffer[n] / (float) (1 << 15);
 
+       if(argc==3)//Miramos si nos han pasado un parametro extra para escribir los resultados en el
+       {
+        //Escribimos en el fichero pasado como parametro
+        fprintf(fpResult,"Potencia media=%d\tAmplitud media=%f\tTasa de cruces por cero=%f\t%f\n", trm, compute_power(x, N),
+                                        compute_am(x, N),
+                                        compute_zcr(x, N, fm));
+
+       }
+       else{
         printf("%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
                                         compute_am(x, N),
                                         compute_zcr(x, N, fm));
+        }
         trm += 1;
     }
-
+    if(argc==3){
+        fclose(fpResult); //Cerramos el archivo.txt
+    }
     cierra_wave(fpWave);
     free(buffer);
     free(x);
