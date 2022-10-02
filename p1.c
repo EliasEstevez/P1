@@ -14,8 +14,9 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
     float *x;
     short *buffer;
     FILE  *fpWave;
-    FILE  *fpResult;
-
+    //FILE  *fpResult;
+    FILE *f_write=fopen(argv[2],"w");
+    FILE *p_write=fopen("potencia.txt","w");
     if (argc != 2 && argc != 3) {
         fprintf(stderr, "Empleo: %s inputfile [outputfile]\n", argv[0]);
         return -1;
@@ -32,10 +33,11 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
         fprintf(stderr, "Error al ubicar los vectores (%s)\n", strerror(errno));
         return -1;
     }
-    if (argc==3)
-    {
-        fpResult=fopen(argv[2],"at");// abrimos el archivo.txt pasado como parametro para escribir al final
-    }
+    //if (argc==3)
+    //{
+      //  fpResult=fopen(argv[2],"at");// abrimos el archivo.txt pasado como parametro para escribir al final
+    //}
+    
     
     trm = 0;
     while (lee_wave(buffer, sizeof(*buffer), N, fpWave) == N) {
@@ -44,21 +46,25 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
        if(argc==3)//Miramos si nos han pasado un parametro extra para escribir los resultados en el
        {
         //Escribimos en el fichero pasado como parametro
-        fprintf(fpResult,"Potencia media=%d\tAmplitud media=%f\tTasa de cruces por cero=%f\t%f\n", trm, compute_power(x, N),
+        fprintf(f_write,"%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
                                         compute_am(x, N),
                                         compute_zcr(x, N, fm));
 
+        fprintf(p_write,"%f\n",compute_power(x, N));
+    
+    
        }
        else{
+        printf("%d",argc);
         printf("%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
                                         compute_am(x, N),
                                         compute_zcr(x, N, fm));
         }
         trm += 1;
     }
-    if(argc==3){
-        fclose(fpResult); //Cerramos el archivo.txt
-    }
+   // if(argc==3){
+     //   fclose(fpResult); //Cerramos el archivo.txt
+    //}
     cierra_wave(fpWave);
     free(buffer);
     free(x);
