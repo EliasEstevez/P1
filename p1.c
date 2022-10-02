@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
         fprintf(stderr, "Empleo: %s inputfile [outputfile]\n", argv[0]);
         return -1;
     }
-
+    
     if ((fpWave = abre_wave(argv[1], &fm)) == NULL) {
         fprintf(stderr, "Error al abrir el fichero WAVE de entrada %s (%s)\n", argv[1], strerror(errno));
         return -1;
