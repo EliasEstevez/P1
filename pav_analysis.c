@@ -3,17 +3,17 @@
 #include <stdlib.h>
 
 float compute_power(const float *x, unsigned int N) {
-   float Potencia=1.e-4;
+   float Potencia=0;
    for (int i = 0; i < N; i++){
 
     Potencia=Potencia + ( x[i]*x[i]);
 
 
    }
-   Potencia=10*log10(Potencia/N);
+   float P=10*log10(Potencia/N);
    
    
-    return Potencia;
+    return P;
 }
 
 float compute_am(const float *x, unsigned int N) {
