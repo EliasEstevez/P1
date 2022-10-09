@@ -13,14 +13,15 @@ FILE    *abre_wave(const char *ficWave, float *fm) {
     //comprobamos que la codificación sea de 16 
     fseek(fpWave,34,SEEK_SET);
     fread(&subchunk1size,2,1,fpWave);
-    //PCM=1 Linear quantization)
+    //PCM=1 Linear quantization
     fseek(fpWave,20,SEEK_SET);
     fread(&formataudi,2,1,fpWave);
     //Miramos cuantos canales hay
     fseek(fpWave,22,SEEK_SET);
     fread(&numcan,2,1,fpWave);
-    printf("\n%i\t%i\t%i\n",numcan,formataudi,subchunk1size);
     
+    //chivato para ver parametros de inflexón
+    //printf("\n%i\t%i\t%i\n",numcan,formataudi,subchunk1size);
     
     
     //Utilizando "fseek" ponemos el offset en el byte 24
@@ -44,7 +45,7 @@ FILE    *abre_wave(const char *ficWave, float *fm) {
     return fpWave;
     }
     else{
-        printf("Error, archivo no cumple las especificaciónes\n");
+        printf("\nError, archivo no cumple las especificaciónes\n");
         return NULL;
     }
 }
