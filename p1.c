@@ -33,11 +33,19 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
         fprintf(stderr, "Error al ubicar los vectores (%s)\n", strerror(errno));
         return -1;
     }
-    if (argc==3)
+    if (argc==3 && (fpResult=fopen(argv[2],"w"))==NULL)
     {
-        fpResult=fopen(argv[2],"at");// abrimos el archivo.txt pasado como parametro para escribir al final
+        if(fopen(argv[2],"w")==NULL){ //Comprobamos que haya fichero
+          fprintf(stderr, "Error al abrir el fichero de texto %s (%s)\n",argv[2], strerror(errno));
+       return -1;           
+
+        }
+        else{
+        fpResult=fopen(argv[2],"w");// abrimos el archivo.txt pasado como parametro para escribir al final
+        }
     }
-    
+
+
     
     trm = 0;
     while (lee_wave(buffer, sizeof(*buffer), N, fpWave) == N) {
@@ -55,6 +63,7 @@ int main(int argc, char *argv[]) { //argc es el numero de parametros pasados 1=f
     
        }
        else{
+        // En caso de no especificar un fichero imprimimos los resultados en pantalla
         printf("%d",argc);
         printf("%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
                                         compute_am(x, N),
